@@ -1,25 +1,25 @@
 -- =========================================
--- QUEST√O 01
+-- QUEST√ÉO 01
 -- User_B pode selecionar todos os atributos de INSTRUCTOR (menos salary)
 -- e de TAKES (menos grade)
 -- =========================================
 
--- Aqui usamos SELECT por coluna, ent„o listamos tudo EXCETO o que foi proibido
+-- Aqui usa-se SELECT por coluna, ent√£o lista-se tudo EXCETO o que foi proibido
 
 GRANT SELECT (ID, name, dept_name)
 ON INSTRUCTOR
 TO User_B;
--- n„o incluÌmos "salary", ent„o ele n„o ter· acesso a esse atributo
+-- n√£o inclu√≠-se "salary", ent√£o ele n√£o ter√° acesso a esse atributo
 
 GRANT SELECT (ID, course_id, sec_id, semester, year)
 ON TAKES
 TO User_B;
--- n„o incluÌmos "grade", ent„o ele n„o poder· visualizar a nota
+-- n√£o inclu√≠-se "grade", ent√£o ele n√£o poder√° visualizar a nota
 
 
 
 -- =========================================
--- QUEST√O 02
+-- QUEST√ÉO 02
 -- User_C pode SELECT e UPDATE na tabela SECTION,
 -- mas apenas nas colunas: course_id, sec_id, semester, year
 -- =========================================
@@ -28,15 +28,15 @@ GRANT SELECT (course_id, sec_id, semester, year),
       UPDATE (course_id, sec_id, semester, year)
 ON SECTION
 TO User_C;
--- aqui limitamos tanto a consulta quanto a modificaÁ„o
--- apenas ‡s colunas especificadas
+-- aqui limita-se tanto a consulta quanto a modifica√ß√£o
+-- apenas √†s colunas especificadas
 
 
 
 -- =========================================
--- QUEST√O 03
+-- QUEST√ÉO 03
 -- User_D pode selecionar todos os atributos de INSTRUCTOR e STUDENT
--- e tambÈm pode acessar a VIEW grade_points
+-- e tamb√©m pode acessar a VIEW grade_points
 -- =========================================
 
 GRANT SELECT
@@ -47,39 +47,39 @@ TO User_D;
 GRANT SELECT
 ON STUDENT
 TO User_D;
--- mesma lÛgica: acesso completo
+-- mesma l√≥gica: acesso completo
 
 GRANT SELECT
 ON grade_points
 TO User_D;
--- grade_points È uma VIEW, mas funciona igual tabela no GRANT
+-- grade_points √© uma VIEW, mas funciona igual tabela no GRANT
 
 
 
 -- =========================================
--- QUEST√O 04
+-- QUEST√ÉO 04
 -- User_E pode ver STUDENT, mas SOMENTE onde dept_name = 'Civil Eng.'
 -- =========================================
 
--- N„o d· pra fazer isso direto com GRANT
--- ent„o criamos uma VIEW com filtro
+-- N√£o d√° pra fazer isso direto com GRANT
+-- ent√£o cria-se uma VIEW com filtro
 
 CREATE VIEW student_civil_eng AS
 SELECT *
 FROM STUDENT
 WHERE dept_name = 'Civil Eng.';
--- essa view j· filtra apenas os alunos de Engenharia Civil
+-- essa view j√° filtra apenas os alunos de Engenharia Civil
 
 GRANT SELECT
 ON student_civil_eng
 TO User_E;
--- o usu·rio sÛ ter· acesso a essa vis„o filtrada
+-- o usu√°rio s√≥ ter√° acesso a essa vis√£o filtrada
 
 
 
 -- =========================================
--- QUEST√O 05
--- Revogar os privilÈgios do User_E
+-- QUEST√ÉO 05
+-- Revogar os privil√©gios do User_E
 -- =========================================
 
 REVOKE SELECT
@@ -90,19 +90,19 @@ FROM User_E;
 
 
 -- =========================================
--- QUEST√O 06
--- Mostrar os privilÈgios dos usu·rios
+-- QUEST√ÉO 06
+-- Mostrar os privil√©gios dos usu√°rios
 -- (SQL Server / Azure)
 -- =========================================
 
 SELECT 
-    dp.name AS UserName,              -- nome do usu·rio
-    dp.type_desc AS UserType,         -- tipo do usu·rio
+    dp.name AS UserName,              -- nome do usu√°rio
+    dp.type_desc AS UserType,         -- tipo do usu√°rio
     o.name AS ObjectName,             -- tabela ou view
-    p.permission_name AS Permission,  -- tipo de permiss„o (SELECT, UPDATE, etc)
+    p.permission_name AS Permission,  -- tipo de permiss√£o (SELECT, UPDATE, etc)
     p.state_desc AS PermissionState   -- estado (GRANT ou DENY)
 FROM sys.database_permissions p
 JOIN sys.objects o ON p.major_id = o.object_id
 JOIN sys.database_principals dp ON p.grantee_principal_id = dp.principal_id
 WHERE dp.name IN ('User_A', 'User_B', 'User_C', 'User_D', 'User_E');
--- esse SELECT mostra tudo que foi concedido para esses usu·rios
+-- esse SELECT mostra tudo que foi concedido para esses usu√°rios
